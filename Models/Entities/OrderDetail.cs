@@ -14,9 +14,6 @@ public class OrderDetail
     public short Quantity { get; set; }
     public float Discount { get; set; }
     
-
-    [JsonIgnore]
-    public Order Order { get; set; } = null!;
     
     [JsonIgnore]
     public Product Product { get; set; } = null!;

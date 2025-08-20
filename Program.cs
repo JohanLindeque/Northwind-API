@@ -1,14 +1,27 @@
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using Northwind_API.Data;
+using Northwind_API.Services;
+using Northwind_API.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
 builder.Services.AddControllers();
+
+// custom services
+builder.Services.AddScoped<IOrderService, OrderService>();
+
+
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 // builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+// register db context
+builder.Services.AddDbContext<AppDBContext>(options => 
+    options.UseNpgsql(builder.Configuration.GetConnectionString("PostgresConnection"))
+);
 
 var app = builder.Build();
 

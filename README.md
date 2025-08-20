@@ -56,12 +56,16 @@ docker exec -it postgres-db psql -U postgres -c "\l"
 
 ---
 ## Useful Commands
-1. List tables in northwind database
+1. Log in to psql:
+```shell
+docker exec -it postgres-db psql -u postgrespsql -u postgres
+```
+2. List tables in northwind database
 ``` shell
 docker exec -it postgres-db psql -U postgres -d northwind -c "\dt"
 ```
 
-2. Connect interactively to explore
+3. Connect interactively to explore
 ``` shell
 docker exec -it postgres-db psql -U postgres -d northwind
 ````
