@@ -2,6 +2,7 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 
 namespace Northwind_API.Models.Entities;
 
@@ -45,9 +46,11 @@ public class Product
     // Navigation Properties
     [ForeignKey("SupplierId")]
     [JsonIgnore]
+    [ValidateNever]
     public Supplier? Supplier { get; set; }
 
     [ForeignKey("CategoryId")]
     [JsonIgnore]
+    [ValidateNever]
     public Category? Category { get; set; }
 }

@@ -2,6 +2,7 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using Microsoft.EntityFrameworkCore;
 
 namespace Northwind_API.Models.Entities;
@@ -24,5 +25,6 @@ public class Shipper
 
     // Navigation Properties
     [JsonIgnore]
+    [ValidateNever]
     public List<Order> Orders { get; set; } = new();
 }

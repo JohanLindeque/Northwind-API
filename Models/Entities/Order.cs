@@ -1,6 +1,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using Newtonsoft.Json;
 
 namespace Northwind_API.Models.Entities;
@@ -67,9 +68,11 @@ public class Order
 
     [ForeignKey("ShipVia")]
     [JsonIgnore]
+    [ValidateNever]
     public Shipper? Shipper { get; set; }
 
     [ForeignKey("OrderId")]
     [JsonIgnore]
+    [ValidateNever]
     public List<OrderDetail> OrderDetails { get; set; } = new();
 }

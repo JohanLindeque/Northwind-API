@@ -1,6 +1,8 @@
 using System;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 
 namespace Northwind_API.Models.Entities;
 
@@ -8,10 +10,10 @@ namespace Northwind_API.Models.Entities;
 public class OrderDetail
 {
     // Composite PK
-    [Column("order_id")]
+    [Key, Column("order_id")]
     public short OrderId { get; set; }
 
-    [Column("product_id")]
+    [Key, Column("product_id")]
     public short ProductId { get; set; }
 
     // Order detail Properties
@@ -26,5 +28,6 @@ public class OrderDetail
 
     [ForeignKey("ProductId")]
     [JsonIgnore]
-    public Product Product { get; set; } = null!;
+    [ValidateNever]
+    public Product Product { get; set; } 
 }
