@@ -6,7 +6,7 @@ using Northwind_API.Services.Interfaces;
 
 namespace Northwind_API.Controllers
 {
-    [Route("api/order")]
+    [Route("api/orders")]
     [ApiController]
     public class OrderController : ControllerBase
     {
@@ -23,6 +23,17 @@ namespace Northwind_API.Controllers
             try
             {
                 var allOrders = await _orderService.GetAllOrders();
+
+                if (allOrders == null)
+                {
+                    var notFoundResponse = new ApiResponse<string>
+                    {
+                        Success = false,
+                        Message = "No orders could be found."
+                    };
+
+                    return new NotFoundObjectResult(notFoundResponse);
+                }
 
                 var response = new ApiResponse<List<Order>>
                 {
@@ -46,6 +57,52 @@ namespace Northwind_API.Controllers
                 return new BadRequestObjectResult(response);
             }
         }
+
+
+        [HttpGet("{Id}")]
+        public async Task<ActionResult<Order>> GetOrderById(short Id)
+        {
+            try
+            {
+                var orderById = await _orderService.GetOrderById(Id);
+
+                if (orderById == null)
+                {
+                    var notFoundResponse = new ApiResponse<string>
+                    {
+                        Success = false,
+                        Message = $"Order with Id {Id} not found."
+                    };
+
+                    return new NotFoundObjectResult(notFoundResponse);
+                }
+
+
+                var response = new ApiResponse<Order>
+                {
+                    Success = true,
+                    Message = $"Order with Id {Id} found.",
+                    Data = orderById
+                };
+
+                return new OkObjectResult(response);
+            }
+            catch (System.Exception ex)
+            {
+
+                var response = new ApiResponse<string>
+                {
+                    Success = false,
+                    Message = "An error occurred.",
+                    Data = ex.Message
+                };
+
+                return new BadRequestObjectResult(response);
+            }
+        }
+
+
+
 
 
     }
