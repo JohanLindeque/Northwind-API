@@ -29,7 +29,7 @@ namespace Northwind_API.Controllers
                 var allOrders = await _orderService.GetAllOrders();
 
                 if (allOrders == null)
-                    return new NotFoundObjectResult(ApiResponse<List<Order>>.ErrorResult(correlationId, "No orders could be found.", new List<Order>()));
+                    return new NotFoundObjectResult(ApiResponse<string>.ErrorResult(correlationId, "No orders could be found.", string.Empty));
 
 
                 return new OkObjectResult(ApiResponse<List<Order>>.Result(correlationId, "All orders returned.", allOrders));
@@ -51,7 +51,7 @@ namespace Northwind_API.Controllers
                 var orderById = await _orderService.GetOrderById(Id);
 
                 if (orderById == null)
-                    return new NotFoundObjectResult(ApiResponse<Order>.ErrorResult(correlationId, $"Order with Id {Id} was not found.", new Order()));
+                    return new NotFoundObjectResult(ApiResponse<string>.ErrorResult(correlationId, $"Order with Id {Id} was not found.", string.Empty));
 
 
                 return new OkObjectResult(ApiResponse<Order>.Result(correlationId, $"Order with Id {Id} found.", orderById));
@@ -77,7 +77,7 @@ namespace Northwind_API.Controllers
 
 
                 if (newOrder == null)
-                    return new BadRequestObjectResult(ApiResponse<Order>.ErrorResult(correlationId, $"Order cannot be null.", new Order()));
+                    return new BadRequestObjectResult(ApiResponse<string>.ErrorResult(correlationId, $"Order cannot be null.", string.Empty));
 
 
 
