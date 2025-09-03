@@ -23,6 +23,7 @@ namespace Northwind_API.Controllers
         public async Task<ActionResult<List<Order>>> GetAllOrders()
         {
             var correlationId = ApiHelper.GenerateCorrelationId();
+
             try
             {
                 var allOrders = await _orderService.GetAllOrders();
@@ -43,42 +44,23 @@ namespace Northwind_API.Controllers
         [HttpGet("{Id}")]
         public async Task<ActionResult<Order>> GetOrderById(short Id)
         {
+            var correlationId = ApiHelper.GenerateCorrelationId();
+
             try
             {
                 var orderById = await _orderService.GetOrderById(Id);
 
                 if (orderById == null)
-                {
-                    var notFoundResponse = new ApiResponse<string>
-                    {
-                        Success = false,
-                        Message = $"Order with Id {Id} was not found."
-                    };
-
-                    return new NotFoundObjectResult(notFoundResponse);
-                }
+                    return new NotFoundObjectResult(ApiResponse<Order>.ErrorResult(correlationId, $"Order with Id {Id} was not found.", new Order()));
 
 
-                var response = new ApiResponse<Order>
-                {
-                    Success = true,
-                    Message = $"Order with Id {Id} found.",
-                    Response = orderById
-                };
+                return new OkObjectResult(ApiResponse<Order>.Result(correlationId, $"Order with Id {Id} found.", orderById));
 
-                return new OkObjectResult(response);
             }
             catch (System.Exception ex)
             {
+                return new BadRequestObjectResult(ApiResponse<string>.ErrorResult(correlationId, "An error occurred.", ex.Message));
 
-                var response = new ApiResponse<string>
-                {
-                    Success = false,
-                    Message = "An error occurred.",
-                    Response = ex.Message
-                };
-
-                return new BadRequestObjectResult(response);
             }
         }
 
@@ -86,54 +68,28 @@ namespace Northwind_API.Controllers
         [Route("add")]
         public async Task<ActionResult<Order>> CreateOrder(Order newOrder)
         {
+            var correlationId = ApiHelper.GenerateCorrelationId();
+
             try
             {
                 if (!ModelState.IsValid)
-                {
-                    var stateResponse = new ApiResponse<ModelStateDictionary>
-                    {
-                        Success = false,
-                        Message = "An error occurred.",
-                        Response = ModelState
-                    };
-                    return new BadRequestObjectResult(stateResponse);
+                    return new BadRequestObjectResult(ApiResponse<ModelStateDictionary>.ErrorResult(correlationId, $"An error occurred.", ModelState));
 
-                }
+
                 if (newOrder == null)
-                {
-                    var nullResponse = new ApiResponse<ModelStateDictionary>
-                    {
-                        Success = false,
-                        Message = "Order cannot be null."
-                    };
-                    return new BadRequestObjectResult(nullResponse);
-                }
+                    return new BadRequestObjectResult(ApiResponse<Order>.ErrorResult(correlationId, $"Order cannot be null.", new Order()));
 
 
 
                 var createdOrder = await _orderService.CreateNewOrder(newOrder);
 
-                var response = new ApiResponse<Order>
-                {
-                    Success = true,
-                    Message = $"Order with Id {createdOrder.OrderId} created successfully.",
-                    Response = createdOrder
-                };
 
+                return CreatedAtAction(nameof(GetOrderById), new { Id = createdOrder.OrderId }, ApiResponse<Order>.Result(correlationId, $"Order with Id {createdOrder.OrderId} created successfully.", createdOrder));
 
-                return CreatedAtAction(nameof(GetOrderById), new { Id = createdOrder.OrderId }, response);
             }
             catch (System.Exception ex)
             {
-
-                var response = new ApiResponse<string>
-                {
-                    Success = false,
-                    Message = "An error occurred.",
-                    Response = ex.Message
-                };
-
-                return new BadRequestObjectResult(response);
+                return new BadRequestObjectResult(ApiResponse<string>.ErrorResult(correlationId, "An error occurred.", ex.Message));
             }
         }
 
@@ -141,35 +97,21 @@ namespace Northwind_API.Controllers
         [HttpDelete("{Id}")]
         public async Task<ActionResult<string>> DeleteOrderById(short Id)
         {
+            var correlationId = ApiHelper.GenerateCorrelationId();
+
             try
             {
                 var wasDeleted = await _orderService.DeleteOrderById(Id);
 
                 if (!wasDeleted)
-                {
-                    var notDeletedResponse = new ApiResponse<string>
-                    {
-                        Success = false,
-                        Message = $"Order with Id {Id} was not found."
-                    };
-
-                    return new NotFoundObjectResult(notDeletedResponse);
-                }
+                    return new NotFoundObjectResult(ApiResponse<string>.ErrorResult(correlationId, $"Order with Id {Id} was not found.", string.Empty));
 
 
-                return NoContent();
+                return new ObjectResult(ApiResponse<string>.Result(correlationId, $"Order with Id {Id} was deleted.", string.Empty)) { StatusCode = StatusCodes.Status204NoContent };
             }
             catch (System.Exception ex)
             {
-
-                var response = new ApiResponse<string>
-                {
-                    Success = false,
-                    Message = "An error occurred.",
-                    Response = ex.Message
-                };
-
-                return new BadRequestObjectResult(response);
+                return new BadRequestObjectResult(ApiResponse<string>.ErrorResult(correlationId, "An error occurred.", ex.Message));
             }
         }
 
