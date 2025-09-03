@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using Newtonsoft.Json;
 
-namespace Northwind_API.Models.Entities;
+namespace Northwind_API.Models.Models;
 
 public class Order
 {
@@ -58,13 +58,6 @@ public class Order
     [Column("ship_country")]
     [MaxLength(15)]
     public string? ShipCountry { get; set; }
-
-    // [ForeignKey("CustomerId")]
-    // [JsonIgnore]
-    // public Customer? Customer { get; set; }
-
-    // [JsonIgnore]
-    // public Employee? Employee { get; set; }
 
     [ForeignKey("ShipVia")]
     [JsonIgnore]

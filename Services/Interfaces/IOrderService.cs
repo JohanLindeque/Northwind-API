@@ -1,6 +1,6 @@
 using System;
 using System.Data;
-using Northwind_API.Models.Entities;
+using Northwind_API.Models.Models;
 
 namespace Northwind_API.Services.Interfaces;
 

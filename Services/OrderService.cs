@@ -2,7 +2,7 @@ using System;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 using Northwind_API.Data;
-using Northwind_API.Models.Entities;
+using Northwind_API.Models.Models;
 using Northwind_API.Services.Interfaces;
 
 namespace Northwind_API.Services;

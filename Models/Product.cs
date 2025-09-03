@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 
-namespace Northwind_API.Models.Entities;
+namespace Northwind_API.Models.Models;
 
 public class Product
 {

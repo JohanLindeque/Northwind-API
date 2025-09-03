@@ -1,8 +1,9 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Northwind_API.Models.API;
+using Northwind_API.Helpers;
 using Northwind_API.Models.Entities;
+using Northwind_API.Models.Models;
 using Northwind_API.Services.Interfaces;
 
 namespace Northwind_API.Controllers
@@ -21,41 +22,20 @@ namespace Northwind_API.Controllers
         [HttpGet("all")]
         public async Task<ActionResult<List<Order>>> GetAllOrders()
         {
+            var correlationId = ApiHelper.GenerateCorrelationId();
             try
             {
                 var allOrders = await _orderService.GetAllOrders();
 
                 if (allOrders == null)
-                {
-                    var notFoundResponse = new ApiResponse<string>
-                    {
-                        Success = false,
-                        Message = "No orders could be found."
-                    };
+                    return new NotFoundObjectResult(ApiResponse<List<Order>>.ErrorResult(correlationId, "No orders could be found.", new List<Order>()));
 
-                    return new NotFoundObjectResult(notFoundResponse);
-                }
 
-                var response = new ApiResponse<List<Order>>
-                {
-                    Success = true,
-                    Message = "All orders returned.",
-                    Data = allOrders
-                };
-
-                return new OkObjectResult(response);
+                return new OkObjectResult(ApiResponse<List<Order>>.Result(correlationId, "All orders returned.", allOrders));
             }
             catch (System.Exception ex)
             {
-
-                var response = new ApiResponse<string>
-                {
-                    Success = false,
-                    Message = "An error occurred.",
-                    Data = ex.Message
-                };
-
-                return new BadRequestObjectResult(response);
+                return new BadRequestObjectResult(ApiResponse<string>.ErrorResult(correlationId, "An error occurred.", ex.Message));
             }
         }
 
@@ -72,7 +52,7 @@ namespace Northwind_API.Controllers
                     var notFoundResponse = new ApiResponse<string>
                     {
                         Success = false,
-                        Message = $"Order with Id {Id} not found."
+                        Message = $"Order with Id {Id} was not found."
                     };
 
                     return new NotFoundObjectResult(notFoundResponse);
@@ -83,7 +63,7 @@ namespace Northwind_API.Controllers
                 {
                     Success = true,
                     Message = $"Order with Id {Id} found.",
-                    Data = orderById
+                    Response = orderById
                 };
 
                 return new OkObjectResult(response);
@@ -95,7 +75,7 @@ namespace Northwind_API.Controllers
                 {
                     Success = false,
                     Message = "An error occurred.",
-                    Data = ex.Message
+                    Response = ex.Message
                 };
 
                 return new BadRequestObjectResult(response);
@@ -114,7 +94,7 @@ namespace Northwind_API.Controllers
                     {
                         Success = false,
                         Message = "An error occurred.",
-                        Data = ModelState
+                        Response = ModelState
                     };
                     return new BadRequestObjectResult(stateResponse);
 
@@ -137,11 +117,11 @@ namespace Northwind_API.Controllers
                 {
                     Success = true,
                     Message = $"Order with Id {createdOrder.OrderId} created successfully.",
-                    Data = createdOrder
+                    Response = createdOrder
                 };
 
 
-                return CreatedAtAction(nameof(GetOrderById), new { Id = createdOrder.OrderId }, response );
+                return CreatedAtAction(nameof(GetOrderById), new { Id = createdOrder.OrderId }, response);
             }
             catch (System.Exception ex)
             {
@@ -150,7 +130,43 @@ namespace Northwind_API.Controllers
                 {
                     Success = false,
                     Message = "An error occurred.",
-                    Data = ex.Message
+                    Response = ex.Message
+                };
+
+                return new BadRequestObjectResult(response);
+            }
+        }
+
+
+        [HttpDelete("{Id}")]
+        public async Task<ActionResult<string>> DeleteOrderById(short Id)
+        {
+            try
+            {
+                var wasDeleted = await _orderService.DeleteOrderById(Id);
+
+                if (!wasDeleted)
+                {
+                    var notDeletedResponse = new ApiResponse<string>
+                    {
+                        Success = false,
+                        Message = $"Order with Id {Id} was not found."
+                    };
+
+                    return new NotFoundObjectResult(notDeletedResponse);
+                }
+
+
+                return NoContent();
+            }
+            catch (System.Exception ex)
+            {
+
+                var response = new ApiResponse<string>
+                {
+                    Success = false,
+                    Message = "An error occurred.",
+                    Response = ex.Message
                 };
 
                 return new BadRequestObjectResult(response);
