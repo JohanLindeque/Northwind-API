@@ -18,7 +18,7 @@ public class OrderService : IOrderService
 
     public async Task<List<Order>> GetAllOrders()
     {
-        var orders = await _context.orders.Include(o => o.Shipper).Include(o => o.OrderDetails).ToListAsync();
+        var orders = await _context.orders.ToListAsync();
         return orders;
     }
 

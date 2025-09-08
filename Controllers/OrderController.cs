@@ -76,8 +76,8 @@ namespace Northwind_API.Controllers
             }
         }
 
-        [HttpPost]
-        [Route("add")]
+
+        [HttpPost("add")]
         public async Task<ActionResult<Order>> CreateOrder(Order newOrder)
         {
             var correlationId = ApiHelper.GenerateCorrelationId();
@@ -140,6 +140,45 @@ namespace Northwind_API.Controllers
             }
         }
 
+
+        [HttpPut("{Id}")]
+        public async Task<ActionResult<Order>> UpdateOrder(short Id, Order order)
+        {
+            var correlationId = ApiHelper.GenerateCorrelationId();
+            Log.Information("[{correlationId}], UpdateOrder, Request recieved.", correlationId);
+
+            try
+            {
+                if (order == null)
+                {
+                    Log.Error("[{correlationId}], UpdateOrder, Order can not be null.", correlationId);
+                    return new BadRequestObjectResult(ApiResponse<string>.ErrorResult(correlationId, $"Order can not be null.", string.Empty));
+                }
+
+                if (Id != order.OrderId)
+                {
+                    Log.Error("[{correlationId}], UpdateOrder, ID mismatch.", correlationId);
+                    return new BadRequestObjectResult(ApiResponse<string>.ErrorResult(correlationId, $"ID mismatch.", string.Empty));
+                }
+
+
+                var updatedOrder = await _orderService.UpdateOrder(order);
+                if (order == null)
+                {
+                    Log.Information("[{correlationId}], UpdateOrder, Order with Id {id} was not found.", correlationId, Id);
+                    return new NotFoundObjectResult(ApiResponse<string>.ErrorResult(correlationId, $"Order with Id {Id} was not found.", string.Empty));
+                }
+
+                Log.Information("[{correlationId}], UpdateOrder, Order with Id {id} updated successfully.", correlationId, updatedOrder.OrderId);
+                return new OkObjectResult(ApiResponse<Order>.Result(correlationId, $"Order with Id {updatedOrder.OrderId} updated successfully.", updatedOrder));
+
+            }
+            catch (System.Exception ex)
+            {
+                Log.Error("[{correlationId}], UpdateOrder, An Error occurred: {error}.", correlationId, ex.Message);
+                return new BadRequestObjectResult(ApiResponse<string>.ErrorResult(correlationId, "An error occurred.", ex.Message));
+            }
+        }
 
 
     }

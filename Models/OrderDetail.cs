@@ -26,8 +26,5 @@ public class OrderDetail
     [Column("discount")]
     public float Discount { get; set; }
 
-    [ForeignKey("ProductId")]
-    [JsonIgnore]
-    [ValidateNever]
-    public Product Product { get; set; }
+
 }

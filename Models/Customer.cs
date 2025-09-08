@@ -55,7 +55,4 @@ public class Customer
     public string? Fax { get; set; }
 
 
-    [JsonIgnore]
-    [ValidateNever]
-    public List<Order> Orders { get; set; } = new();
 }

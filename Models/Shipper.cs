@@ -23,8 +23,5 @@ public class Shipper
     [MaxLength(24)]
     public string? Phone { get; set; }
 
-    // Navigation Properties
-    [JsonIgnore]
-    [ValidateNever]
-    public List<Order> Orders { get; set; } = new();
+    
 }

@@ -43,14 +43,5 @@ public class Product
     [Column("discontinued")]
     public int Discontinued { get; set; }
 
-    // Navigation Properties
-    [ForeignKey("SupplierId")]
-    [JsonIgnore]
-    [ValidateNever]
-    public Supplier? Supplier { get; set; }
 
-    [ForeignKey("CategoryId")]
-    [JsonIgnore]
-    [ValidateNever]
-    public Category? Category { get; set; }
 }

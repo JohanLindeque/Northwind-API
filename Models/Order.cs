@@ -59,13 +59,5 @@ public class Order
     [MaxLength(15)]
     public string? ShipCountry { get; set; }
 
-    [ForeignKey("ShipVia")]
-    [JsonIgnore]
-    [ValidateNever]
-    public Shipper? Shipper { get; set; }
-
-    [ForeignKey("OrderId")]
-    [JsonIgnore]
-    [ValidateNever]
-    public List<OrderDetail> OrderDetails { get; set; } = new();
+  
 }
