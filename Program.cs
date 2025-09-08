@@ -19,16 +19,14 @@ builder.Services.AddOpenApi();
 // builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// configure serilog.asp
+// configure serilog for ASP
 Log.Logger = new LoggerConfiguration()
-    .MinimumLevel.Information()
-    .WriteTo.Console()
-    .WriteTo.File("./Logs/log-.txt", rollingInterval: RollingInterval.Day)
+    .ReadFrom.Configuration(builder.Configuration)
     .CreateLogger();
-    
+// builder.Host.UseSerilog();
 
 // register db context
-builder.Services.AddDbContext<AppDBContext>(options => 
+builder.Services.AddDbContext<AppDBContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("PostgresConnection"))
 );
 
@@ -48,8 +46,10 @@ if (app.Environment.IsDevelopment())
     // Able to view Swagger:
     // http://localhost:8008/swagger/v1/swagger.json
     // http://localhost:8008/index.html
-    
+
 }
+
+// app.UseSerilogRequestLogging();
 
 app.UseHttpsRedirection();
 
