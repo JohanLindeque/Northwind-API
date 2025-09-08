@@ -5,6 +5,7 @@ using Northwind_API.Helpers;
 using Northwind_API.Models.Entities;
 using Northwind_API.Models.Models;
 using Northwind_API.Services.Interfaces;
+using Serilog;
 
 namespace Northwind_API.Controllers
 {
@@ -23,19 +24,24 @@ namespace Northwind_API.Controllers
         public async Task<ActionResult<List<Order>>> GetAllOrders()
         {
             var correlationId = ApiHelper.GenerateCorrelationId();
+            Log.Information("[{correlationId}], GetAllOrders, Request recieved, {dateTime} UTC", correlationId);
 
             try
             {
                 var allOrders = await _orderService.GetAllOrders();
 
                 if (allOrders == null)
+                {
+                    Log.Warning("[{correlationId}], GetAllOrders, No Orders could be found, {dateTime} UTC", correlationId);
                     return new NotFoundObjectResult(ApiResponse<string>.ErrorResult(correlationId, "No orders could be found.", string.Empty));
+                }
 
-
+                Log.Information("[{correlationId}], GetAllOrders, All Orders returned, {dateTime} UTC", correlationId);
                 return new OkObjectResult(ApiResponse<List<Order>>.Result(correlationId, "All orders returned.", allOrders));
             }
             catch (System.Exception ex)
             {
+                Log.Information("[{correlationId}], GetAllOrders, An Error occurred: {error}, {dateTime} UTC", correlationId, ex.Message);
                 return new BadRequestObjectResult(ApiResponse<string>.ErrorResult(correlationId, "An error occurred.", ex.Message));
             }
         }
@@ -59,6 +65,7 @@ namespace Northwind_API.Controllers
             }
             catch (System.Exception ex)
             {
+                Log.Information("[{correlationId}], GetOrdedrById, An Error occurred: {error}, {dateTime} UTC", correlationId, ex.Message);
                 return new BadRequestObjectResult(ApiResponse<string>.ErrorResult(correlationId, "An error occurred.", ex.Message));
 
             }
@@ -89,6 +96,7 @@ namespace Northwind_API.Controllers
             }
             catch (System.Exception ex)
             {
+                Log.Information("[{correlationId}], CreateNewOrder, An Error occurred: {error}, {dateTime} UTC", correlationId, ex.Message);
                 return new BadRequestObjectResult(ApiResponse<string>.ErrorResult(correlationId, "An error occurred.", ex.Message));
             }
         }
@@ -111,6 +119,7 @@ namespace Northwind_API.Controllers
             }
             catch (System.Exception ex)
             {
+                Log.Information("[{correlationId}], DeletOrerById, An Error occurred: {error}, {dateTime} UTC", correlationId, ex.Message);
                 return new BadRequestObjectResult(ApiResponse<string>.ErrorResult(correlationId, "An error occurred.", ex.Message));
             }
         }

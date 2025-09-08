@@ -3,6 +3,7 @@ using Microsoft.Extensions.Options;
 using Northwind_API.Data;
 using Northwind_API.Services;
 using Northwind_API.Services.Interfaces;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,6 +18,14 @@ builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddOpenApi();
 // builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+// configure serilog.asp
+Log.Logger = new LoggerConfiguration()
+    .MinimumLevel.Information()
+    .WriteTo.Console()
+    .WriteTo.File("./Logs/log-.txt", rollingInterval: RollingInterval.Day)
+    .CreateLogger();
+    
 
 // register db context
 builder.Services.AddDbContext<AppDBContext>(options => 
