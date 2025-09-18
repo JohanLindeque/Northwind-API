@@ -1,6 +1,6 @@
 using System;
 
-namespace Northwind_API.Models.Entities;
+namespace Northwind_API.Models;
 
 public class ApiResponse<T> // T -> makes this class generic, works with any type 
 {

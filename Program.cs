@@ -1,11 +1,35 @@
+using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 using Northwind_API.Data;
 using Northwind_API.Services;
 using Northwind_API.Services.Interfaces;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// add JWT auth to API
+builder.Services.AddAuthentication(x =>
+{
+    x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    x.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(x =>
+{
+    x.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidIssuer = builder.Configuration["JwtSettings:Issuer"],
+        ValidAudience = builder.Configuration["JwtSettings:Audience"],
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JwtSettings:Key"]!)),
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true
+    };
+});
+builder.Services.AddAuthentication();
 
 // Add services to the container.
 builder.Services.AddControllers();
@@ -14,7 +38,6 @@ builder.Services.AddControllers();
 builder.Services.AddScoped<IOrderService, OrderService>();
 
 
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 // builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -40,19 +63,15 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI(options =>
     {
         options.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
-        options.RoutePrefix = string.Empty; // view Swagger UI at the app's root (https://localhost:<port>/)
+        options.RoutePrefix = string.Empty; // view Swagger UI at the app's root (https://localhost:<port>/) http://localhost:8008/index.html
     });
-
-    // Able to view Swagger:
-    // http://localhost:8008/swagger/v1/swagger.json
-    // http://localhost:8008/index.html
-
 }
 
 // app.UseSerilogRequestLogging();
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Northwind_API.Helpers;
-using Northwind_API.Models.Entities;
+using Northwind_API.Models;
 using Northwind_API.Models.Models;
 using Northwind_API.Services.Interfaces;
 using Serilog;
