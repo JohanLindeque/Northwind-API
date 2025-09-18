@@ -1,5 +1,6 @@
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
@@ -18,6 +19,8 @@ builder.Services.AddAuthentication(x =>
     x.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
 }).AddJwtBearer(x =>
 {
+    x.RequireHttpsMetadata = false; // enable in production env
+    x.SaveToken = true;
     x.TokenValidationParameters = new TokenValidationParameters
     {
         ValidIssuer = builder.Configuration["JwtSettings:Issuer"],
@@ -29,14 +32,19 @@ builder.Services.AddAuthentication(x =>
         ValidateIssuerSigningKey = true
     };
 });
-builder.Services.AddAuthentication();
+builder.Services.AddAuthorization();
+
+// register db context
+builder.Services.AddDbContext<AppDBContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("PostgresConnection"))
+);
+
 
 // Add services to the container.
 builder.Services.AddControllers();
 
 // custom services
 builder.Services.AddScoped<IOrderService, OrderService>();
-
 
 builder.Services.AddOpenApi();
 // builder.Services.AddEndpointsApiExplorer();
@@ -47,11 +55,6 @@ Log.Logger = new LoggerConfiguration()
     .ReadFrom.Configuration(builder.Configuration)
     .CreateLogger();
 // builder.Host.UseSerilog();
-
-// register db context
-builder.Services.AddDbContext<AppDBContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("PostgresConnection"))
-);
 
 var app = builder.Build();
 
