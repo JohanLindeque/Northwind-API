@@ -48,7 +48,7 @@ namespace Northwind_API.Controllers
         }
 
 
-        [HttpGet("{Id}")]
+        [HttpGet("{Id}"), Authorize]
         public async Task<ActionResult<Order>> GetOrderById(short Id)
         {
             var correlationId = ApiHelper.GenerateCorrelationId();
@@ -78,7 +78,7 @@ namespace Northwind_API.Controllers
         }
 
 
-        [HttpPost("add")]
+        [HttpPost("add"), Authorize]
         public async Task<ActionResult<Order>> CreateOrder(Order newOrder)
         {
             var correlationId = ApiHelper.GenerateCorrelationId();
@@ -115,7 +115,7 @@ namespace Northwind_API.Controllers
         }
 
 
-        [HttpDelete("{Id}")]
+        [HttpDelete("{Id}"), Authorize]
         public async Task<ActionResult<string>> DeleteOrderById(short Id)
         {
             var correlationId = ApiHelper.GenerateCorrelationId();
@@ -142,7 +142,7 @@ namespace Northwind_API.Controllers
         }
 
 
-        [HttpPut("{Id}")]
+        [HttpPut("{Id}"), Authorize]
         public async Task<ActionResult<Order>> UpdateOrder(short Id, Order order)
         {
             var correlationId = ApiHelper.GenerateCorrelationId();
