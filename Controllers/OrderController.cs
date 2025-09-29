@@ -15,8 +15,8 @@ namespace Northwind_API.Controllers
     public class OrderController : ControllerBase
     {
 
-        private IOrderService _orderService;
-        public OrderController(IOrderService orderService)
+        private IOrder _orderService;
+        public OrderController(IOrder orderService)
         {
             _orderService = orderService;
         }

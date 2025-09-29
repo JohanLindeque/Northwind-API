@@ -4,7 +4,7 @@ using Northwind_API.Models.Models;
 
 namespace Northwind_API.Services.Interfaces;
 
-public interface IOrderService
+public interface IOrder
 {
     Task<List<Order>> GetAllOrders();
     Task<Order?> GetOrderById(short Id);

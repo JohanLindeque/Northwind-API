@@ -7,7 +7,7 @@ using Northwind_API.Services.Interfaces;
 
 namespace Northwind_API.Services;
 
-public class OrderService : IOrderService
+public class OrderService : IOrder
 {
     private readonly AppDBContext _context;
 

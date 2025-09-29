@@ -33,7 +33,10 @@ builder.Services.AddControllers();
 
 builder.Services.AddIdentityApiEndpoints<IdentityUser>().AddEntityFrameworkStores<AuthDBContext>();
 
-builder.Services.AddScoped<IOrderService, OrderService>();
+builder.Services.AddScoped<IOrder, OrderService>();
+builder.Services.AddScoped<IProduct, ProductService>();
+builder.Services.AddScoped<ICustomer, CustomerService>();
+
 
 builder.Services.AddOpenApi();
 
