@@ -2,7 +2,7 @@ using System;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 using Northwind_API.Data;
-using Northwind_API.Models.Entities;
+using Northwind_API.Models.Models;
 using Northwind_API.Services.Interfaces;
 
 namespace Northwind_API.Services;
@@ -18,7 +18,7 @@ public class OrderService : IOrderService
 
     public async Task<List<Order>> GetAllOrders()
     {
-        var orders = await _context.orders.Include(o => o.Shipper).Include(o => o.OrderDetails).ToListAsync();
+        var orders = await _context.orders.ToListAsync();
         return orders;
     }
 

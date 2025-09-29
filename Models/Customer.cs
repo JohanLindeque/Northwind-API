@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 
-namespace Northwind_API.Models.Entities;
+namespace Northwind_API.Models.Models;
 
 public class Customer
 {
@@ -55,7 +55,4 @@ public class Customer
     public string? Fax { get; set; }
 
 
-    [JsonIgnore]
-    [ValidateNever]
-    public List<Order> Orders { get; set; } = new();
 }

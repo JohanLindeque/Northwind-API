@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 
-namespace Northwind_API.Models.Entities;
+namespace Northwind_API.Models.Models;
 
 public class Product
 {
@@ -43,14 +43,5 @@ public class Product
     [Column("discontinued")]
     public int Discontinued { get; set; }
 
-    // Navigation Properties
-    [ForeignKey("SupplierId")]
-    [JsonIgnore]
-    [ValidateNever]
-    public Supplier? Supplier { get; set; }
 
-    [ForeignKey("CategoryId")]
-    [JsonIgnore]
-    [ValidateNever]
-    public Category? Category { get; set; }
 }

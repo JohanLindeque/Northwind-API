@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 
-namespace Northwind_API.Models.Entities;
+namespace Northwind_API.Models.Models;
 
 [Table("order_details")]
 public class OrderDetail
@@ -26,8 +26,5 @@ public class OrderDetail
     [Column("discount")]
     public float Discount { get; set; }
 
-    [ForeignKey("ProductId")]
-    [JsonIgnore]
-    [ValidateNever]
-    public Product Product { get; set; } 
+
 }
