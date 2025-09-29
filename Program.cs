@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.VisualBasic;
 using Northwind_API.Data;
 using Northwind_API.Services;
 using Northwind_API.Services.Interfaces;
@@ -34,31 +35,38 @@ builder.Services.AddAuthentication(x =>
 });
 builder.Services.AddAuthorization();
 
-// register db context
+// db context
+// Northwind: Database First, no migrations
 builder.Services.AddDbContext<AppDBContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("PostgresConnection"))
 );
 
+// Identity: manages ASP.NET Core Identity tables
+builder.Services.AddDbContext<AuthDBContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("PostgresConnection"))
+);
 
-// Add services to the container.
+
+
 builder.Services.AddControllers();
 
-// custom services
+builder.Services.AddIdentityApiEndpoints<IdentityUser>().AddEntityFrameworkStores<AuthDBContext>();
+
 builder.Services.AddScoped<IOrderService, OrderService>();
 
 builder.Services.AddOpenApi();
-// builder.Services.AddEndpointsApiExplorer();
+
 builder.Services.AddSwaggerGen();
 
 // configure serilog for ASP
 Log.Logger = new LoggerConfiguration()
     .ReadFrom.Configuration(builder.Configuration)
     .CreateLogger();
-// builder.Host.UseSerilog();
+
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
@@ -70,7 +78,7 @@ if (app.Environment.IsDevelopment())
     });
 }
 
-// app.UseSerilogRequestLogging();
+app.MapIdentityApi<IdentityUser>();
 
 app.UseHttpsRedirection();
 
