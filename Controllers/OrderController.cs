@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
@@ -20,7 +21,7 @@ namespace Northwind_API.Controllers
             _orderService = orderService;
         }
 
-        [HttpGet("all")]
+        [HttpGet("all"), Authorize]
         public async Task<ActionResult<List<Order>>> GetAllOrders()
         {
             var correlationId = ApiHelper.GenerateCorrelationId();
