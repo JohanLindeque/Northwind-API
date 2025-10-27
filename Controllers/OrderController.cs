@@ -82,7 +82,7 @@ namespace Northwind_API.Controllers
         public async Task<ActionResult<Order>> CreateOrder(Order newOrder)
         {
             var correlationId = ApiHelper.GenerateCorrelationId();
-            Log.Information("[{correlationId}], GetOrdersById, Request recieved.", correlationId);
+            Log.Information("[{correlationId}], CreateOrder, Request recieved.", correlationId);
 
             try
             {
@@ -131,7 +131,7 @@ namespace Northwind_API.Controllers
                     return new NotFoundObjectResult(ApiResponse<string>.ErrorResult(correlationId, $"Order with Id {Id} was not found.", string.Empty));
                 }
 
-                Log.Information("[{correlationId}], DeleteOrderById, Order with Id {id} created successfully.", correlationId, Id);
+                Log.Information("[{correlationId}], DeleteOrderById, Order with Id {id} deleted successfully.", correlationId, Id);
                 return new ObjectResult(ApiResponse<string>.Result(correlationId, $"Order with Id {Id} was deleted.", string.Empty)) { StatusCode = StatusCodes.Status204NoContent };
             }
             catch (System.Exception ex)
