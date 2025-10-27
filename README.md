@@ -4,8 +4,9 @@ A RESTful API built with ASP.NET Core on top of the Northwind database, featurin
 
 Technologies: ASP.NET Core, PostgreSQL, Entity Framework Core, Docker, REST API, ASP.NET Core Identity
 
----
+<img width="1863" height="961" alt="northwind" src="https://github.com/user-attachments/assets/74d2020a-74a6-4727-b877-21051c826ffc" />
 
+---
 ## Running locally
 
 - Docker and Docker Compose installed
