@@ -1,6 +1,12 @@
 # Northwind Database Setup in Docker
+
+A RESTful API built with ASP.NET Core on top of the Northwind database, featuring CRUD operations for orders, customers, and products. Implements secure endpoints with ASP.NET Core Identity authentication and uses Entity Framework Core for data access. The database runs in a Docker container with PostgreSQL.
+
+Technologies: ASP.NET Core, PostgreSQL, Entity Framework Core, Docker, REST API, ASP.NET Core Identity
+
 ---
-## Prerequisites
+
+## Running locally
 
 - Docker and Docker Compose installed
 - northwind.sql file ready (can be dowloaded from https://github.com/pthom/northwind_psql/blob/master/northwind.sql)
