@@ -15,8 +15,8 @@ namespace Northwind_API.Controllers
     public class OrderController : ControllerBase
     {
 
-        private IOrderService _orderService;
-        public OrderController(IOrderService orderService)
+        private IOrder _orderService;
+        public OrderController(IOrder orderService)
         {
             _orderService = orderService;
         }
@@ -48,7 +48,7 @@ namespace Northwind_API.Controllers
         }
 
 
-        [HttpGet("{Id}")]
+        [HttpGet("{Id}"), Authorize]
         public async Task<ActionResult<Order>> GetOrderById(short Id)
         {
             var correlationId = ApiHelper.GenerateCorrelationId();
@@ -78,11 +78,11 @@ namespace Northwind_API.Controllers
         }
 
 
-        [HttpPost("add")]
+        [HttpPost("add"), Authorize]
         public async Task<ActionResult<Order>> CreateOrder(Order newOrder)
         {
             var correlationId = ApiHelper.GenerateCorrelationId();
-            Log.Information("[{correlationId}], GetOrdersById, Request recieved.", correlationId);
+            Log.Information("[{correlationId}], CreateOrder, Request recieved.", correlationId);
 
             try
             {
@@ -115,7 +115,7 @@ namespace Northwind_API.Controllers
         }
 
 
-        [HttpDelete("{Id}")]
+        [HttpDelete("{Id}"), Authorize]
         public async Task<ActionResult<string>> DeleteOrderById(short Id)
         {
             var correlationId = ApiHelper.GenerateCorrelationId();
@@ -131,7 +131,7 @@ namespace Northwind_API.Controllers
                     return new NotFoundObjectResult(ApiResponse<string>.ErrorResult(correlationId, $"Order with Id {Id} was not found.", string.Empty));
                 }
 
-                Log.Information("[{correlationId}], DeleteOrderById, Order with Id {id} created successfully.", correlationId, Id);
+                Log.Information("[{correlationId}], DeleteOrderById, Order with Id {id} deleted successfully.", correlationId, Id);
                 return new ObjectResult(ApiResponse<string>.Result(correlationId, $"Order with Id {Id} was deleted.", string.Empty)) { StatusCode = StatusCodes.Status204NoContent };
             }
             catch (System.Exception ex)
@@ -142,7 +142,7 @@ namespace Northwind_API.Controllers
         }
 
 
-        [HttpPut("{Id}")]
+        [HttpPut("{Id}"), Authorize]
         public async Task<ActionResult<Order>> UpdateOrder(short Id, Order order)
         {
             var correlationId = ApiHelper.GenerateCorrelationId();
